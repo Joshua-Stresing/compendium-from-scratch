@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import './Main.css';
-import { fetchPokemon, fetchTypes, filterTypes } from '../../services/pokemon/fetchpokemon';
+import {
+  fetchPokemon,
+  fetchTypes,
+  filterTypes,
+} from '../../services/pokemon/fetchpokemon';
 import Filter from '../../components/Controls/Filter/Filter';
 import SearchBar from '../../components/Controls/Search/Search';
 import Order from '../../components/Controls/Order/Order';
 
 export default function Main() {
-
   const [pokemon, setPokemon] = useState([]);
   const [types, setTypes] = useState([]);
   const [selectedType, setSelectedType] = useState('all');
@@ -15,18 +18,16 @@ export default function Main() {
   const [search, setSearch] = useState('');
   const [order, setOrder] = useState('');
 
-  useEffect(() =>{
+  useEffect(() => {
     const fetchData = async () => {
       const typesData = await fetchTypes();
       setTypes(['all', ...typesData]);
-      
     };
     fetchData();
   }, []);
 
   useEffect(() => {
     const fetchData = async () => {
-
       try {
         const data = await fetchPokemon();
         setPokemon(data);
@@ -38,7 +39,7 @@ export default function Main() {
     fetchData();
   }, []);
 
-  useEffect(() =>{
+  useEffect(() => {
     const chosenType = async () => {
       const matchedTypes = await filterTypes(selectedType, null, order);
       setPokemon(matchedTypes);
@@ -53,36 +54,49 @@ export default function Main() {
     setPokemon(data);
   };
 
-  if (loading) return <div className="wrapper">
-    <div className="pokeball">
-    </div>
-  </div>;
-
-
+  if (loading)
+    return (
+      <div className="wrapper">
+        <div className="pokeball"></div>
+      </div>
+    );
 
   return (
-    <>
+    <article>
       <>
-        <SearchBar query={search} setQuery={setSearch} searchSubmit={pokeSearch} />
-        <Order setOrder={setOrder}/>
+        <SearchBar
+          query={search}
+          setQuery={setSearch}
+          searchSubmit={pokeSearch}
+        />
+        <Order setOrder={setOrder} />
       </>
       <div>
-        <Filter types={types} setSelectedType={setSelectedType}/>
+        <Filter types={types} setSelectedType={setSelectedType} />
       </div>
-      <div className='Pokemon'>
+      <div className="Pokemon">
         <h1>Pokemon</h1>
         {error && <p>{error}</p>}
-        { pokemon.map((pokemon) => (
+        {pokemon.map((pokemon) => (
           <div key={pokemon.id}>
             <h3>{pokemon.pokemon}</h3>
-            <img src={pokemon.url_image}></img>
-            <p>HP: {pokemon.hp} / Speed: {pokemon.speed}</p>
-            <p>Attack: {pokemon.attack} / Defense: {pokemon.defense}</p>
-            <p>Special Attack: {pokemon.special_attack} / Special Defense: {pokemon.special_defense}</p>
-            <p>Type 1: {pokemon.type_1} / Type 2: {pokemon.type_2}</p>
+            <img alt="Image of a pokemon" src={pokemon.url_image}></img>
+            <p>
+              HP: {pokemon.hp} / Speed: {pokemon.speed}
+            </p>
+            <p>
+              Attack: {pokemon.attack} / Defense: {pokemon.defense}
+            </p>
+            <p>
+              Special Attack: {pokemon.special_attack} / Special Defense:{' '}
+              {pokemon.special_defense}
+            </p>
+            <p>
+              Type 1: {pokemon.type_1} / Type 2: {pokemon.type_2}
+            </p>
           </div>
-        )) }
+        ))}
       </div>
-    </>
+    </article>
   );
 }
