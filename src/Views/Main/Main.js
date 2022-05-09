@@ -57,12 +57,12 @@ export default function Main() {
   if (loading)
     return (
       <div className="wrapper">
-        <div className="pokeball"></div>
+        <div className="pokeball">loading...</div>
       </div>
     );
 
   return (
-    <article>
+    <>
       <>
         <SearchBar
           query={search}
@@ -78,7 +78,7 @@ export default function Main() {
         <h1>Pokemon</h1>
         {error && <p>{error}</p>}
         {pokemon.map((pokemon) => (
-          <div key={pokemon.id}>
+          <article key={pokemon.id}>
             <h3>{pokemon.pokemon}</h3>
             <img alt="Image of a pokemon" src={pokemon.url_image}></img>
             <p>
@@ -94,9 +94,9 @@ export default function Main() {
             <p>
               Type 1: {pokemon.type_1} / Type 2: {pokemon.type_2}
             </p>
-          </div>
+          </article>
         ))}
       </div>
-    </article>
+    </>
   );
 }
